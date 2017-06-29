@@ -11,6 +11,8 @@
 
 declare(strict_types=1);
 
+use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\AcmeFileDummy;
+use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\AcmeUser;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\Answer;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\CompositeItem;
 use ApiPlatform\Core\Tests\Fixtures\TestBundle\Entity\CompositeLabel;
@@ -663,6 +665,25 @@ class FeatureContext implements Context, SnippetAcceptingContext
         $product->addOffer($aggregate);
 
         $this->manager->persist($product);
+        $this->manager->flush();
+    }
+
+    /**
+     * @Given there is acme fixtures
+     */
+    public function testThereIsAcmeFixtures()
+    {
+        $user = new AcmeUser();
+        $user->setUsername('acme_dummy');
+        $user->setEmail('acme_dummy@example.com');
+        $user->setPassword('fake');
+        $this->manager->persist($user);
+
+        $file = new AcmeFileDummy();
+        $file->setOwner($user);
+        $file->setName('dummy');
+        $this->manager->persist($file);
+
         $this->manager->flush();
     }
 }
